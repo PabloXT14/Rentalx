@@ -1,4 +1,4 @@
-import { Category } from '../models/Category';
+import { CategoriesRepository } from '../repositories/CategoriesRepository';
 
 interface IRequest {
     name: string;
@@ -6,23 +6,28 @@ interface IRequest {
 }
 
 /*
-[] - Definir o tipo de retorno
+[x] - Definir o tipo de retorno
 [x] - Alterar o retorno de erro
-[] - Acessar o repositório
-[] - Retornar algo
+[x] - Acessar o repositório
 */
 
 class CreateCategoryService {
-    execute({ name, description }: IRequest) {
+    private categoriesRepository: CategoriesRepository;
+
+    constructor(categoriesRepository: CategoriesRepository) {
+        this.categoriesRepository = categoriesRepository;
+    }
+
+    execute({ name, description }: IRequest): void | Error {
         // Check if categorie already exists
-        const categoryAlreadyExists = categoriesRepository.findByName(name);
+        const categoryAlreadyExists = this.categoriesRepository.findByName(name);
 
         if (categoryAlreadyExists) throw new Error('Category Already exists!');
 
         // Create Category
-        categoriesRepository.create({ name, description });
+        this.categoriesRepository.create({ name, description });
     }
-    
+
 }
 
 export { CreateCategoryService };
