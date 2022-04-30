@@ -14,7 +14,7 @@ categoriesRoutes.post('/', (request, response) => {
     const result = createCategoryService.execute({ name, description });
 
     if (result instanceof Error) {
-        return response.status(401).json(result);
+        return response.status(401).json(result.message);
     }
 
     return response.status(201).json('Category Created');

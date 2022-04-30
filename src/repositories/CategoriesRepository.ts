@@ -1,12 +1,8 @@
 import { Category } from '../models/Category';
+import { ICategoriesRepository, ICreateCategoryDTO } from './ICategoriesRepository';
 
-// DTO (Data Transfer Object) - modelo/tipagem dos datas que a nossa rota vai precisar enviar para o Repositorie
-interface ICreateCategoryDTO {
-    name: string;
-    description: string;
-}
-
-class CategoriesRepository {
+// Implementando tipagem do Repositorie
+class CategoriesRepository implements ICategoriesRepository {
     private categories: Category[];
 
     constructor() {
