@@ -20,14 +20,14 @@ class CreateCategoryService {
 
     execute({ name, description }: IRequest): void | Error {
         // Check if categorie already exists
-        const categoryAlreadyExists = this.categoriesRepository.findByName(name);
+        const categoryAlreadyExists =
+            this.categoriesRepository.findByName(name);
 
         if (categoryAlreadyExists) return new Error('Category Already exists!');
 
         // Create Category
         this.categoriesRepository.create({ name, description });
     }
-
 }
 
 export { CreateCategoryService };
