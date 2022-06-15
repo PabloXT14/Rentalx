@@ -1,25 +1,14 @@
 import { Router } from 'express';
+
 import { CategoriesRepository } from '../modules/cars/repositories/CategoriesRepository';
-import { CreateCategoryService } from '../modules/cars/services/CreateCategoryService';
+import { createCategoryController } from '../modules/cars/useCases/createCategory';
 
 const categoriesRoutes = Router();
 const categoriesRepository = new CategoriesRepository();
 
 // Rota Cadastro de Categories
 categoriesRoutes.post('/', (request, response) => {
-    const { name, description } = request.body;
-
-    const createCategoryService = new CreateCategoryService(
-        categoriesRepository,
-    );
-
-    const result = createCategoryService.execute({ name, description });
-
-    if (result instanceof Error) {
-        return response.status(401).json(result.message);
-    }
-
-    return response.status(201).json('Category Created');
+    return createCategoryController.handle(request, response);
 });
 
 // Rota Listar todas as Categories

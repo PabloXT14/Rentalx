@@ -1,4 +1,4 @@
-import { ICategoriesRepository } from '../repositories/ICategoriesRepository';
+import { ICategoriesRepository } from '../../repositories/ICategoriesRepository';
 
 interface IRequest {
     name: string;
@@ -11,13 +11,14 @@ interface IRequest {
 [x] - Acessar o repositório
 */
 
-class CreateCategoryService {
+class CreateCategoryUseCase {
     private categoriesRepository: ICategoriesRepository;
 
     constructor(categoriesRepository: ICategoriesRepository) {
         this.categoriesRepository = categoriesRepository;
     }
 
+    // eslint-disable-next-line consistent-return
     execute({ name, description }: IRequest): void | Error {
         // Check if categorie already exists
         const categoryAlreadyExists =
@@ -30,4 +31,4 @@ class CreateCategoryService {
     }
 }
 
-export { CreateCategoryService };
+export { CreateCategoryUseCase };
