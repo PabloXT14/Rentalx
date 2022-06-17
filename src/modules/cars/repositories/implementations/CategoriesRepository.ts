@@ -1,8 +1,8 @@
-import { Category } from '../models/Category';
+import { Category } from '../../models/Category';
 import {
     ICategoriesRepository,
     ICreateCategoryDTO,
-} from './ICategoriesRepository';
+} from '../ICategoriesRepository';
 
 // Implementando tipagem do Repositorie
 class CategoriesRepository implements ICategoriesRepository {
