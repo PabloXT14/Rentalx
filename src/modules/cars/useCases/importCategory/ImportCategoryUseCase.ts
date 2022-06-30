@@ -1,20 +1,63 @@
 import { parse } from 'csv-parse';
 import fs from 'fs';
+import { Category } from '../../models/Category';
+
+import { ICategoriesRepository } from '../../repositories/ICategoriesRepository';
+
+interface IImportCategory {
+    name: string;
+    description: string;
+}
 
 class ImportCategoryUseCase {
-    execute(file: Express.Multer.File): void {
-        // CRIANDO STREAM DE LEITURA DO ARQUIVO RECEBIDO PELA ROTA
-        const stream = fs.createReadStream(file.path); // passando caminho do arquivo
+    constructor(private categoriesRepository: ICategoriesRepository) {}
 
-        // BIBLIOTECA CSVPARSE PARA CONVERTER NOSSO ARQUIVO PARA UM FORMATO ESPECIFICO
-        const parseFile = parse();
+    loadCategories(file: Express.Multer.File): Promise<IImportCategory[]> {
+        return new Promise((resolve, reject) => {
+            // CRIANDO STREAM DE LEITURA DO ARQUIVO RECEBIDO PELA ROTA
+            const stream = fs.createReadStream(file.path); // passando caminho do arquivo
+            const categories: IImportCategory[] = [];
 
-        // PIPE: SERVE PARA PASSAR O PEDAÇO LIDO DO STREAM PARA ALGUM LUGAR/AÇÃO
-        stream.pipe(parseFile);
+            // BIBLIOTECA CSVPARSE PARA CONVERTER NOSSO ARQUIVO PARA UM FORMATO ESPECIFICO
+            const parseFile = parse();
 
-        // LENDO O QUE FOI RECEBIDO
-        parseFile.on('data', async line => {
-            console.log(line);
+            // PIPE: SERVE PARA PASSAR O PEDAÇO LIDO DO STREAM PARA ALGUM LUGAR/AÇÃO
+            stream.pipe(parseFile);
+
+            // LENDO O QUE FOI RECEBIDO
+            parseFile
+                .on('data', async line => {
+                    // ["name", "description"]
+                    const [name, description] = line;
+                    categories.push({
+                        name,
+                        description,
+                    });
+                })
+                .on('end', () => {
+                    resolve(categories);
+                })
+                .on('error', err => {
+                    console.log(err);
+                });
+        });
+    }
+
+    // INSERINDO CATEGORIAS IMPORTADAS NO REPOSITORY
+    async execute(file: Express.Multer.File): Promise<void> {
+        const categories = await this.loadCategories(file);
+
+        categories.map(async category => {
+            const { name, description } = category;
+
+            const existCategory = this.categoriesRepository.findByName(name);
+
+            if (!existCategory) {
+                this.categoriesRepository.create({
+                    name,
+                    description,
+                });
+            }
         });
     }
 }
