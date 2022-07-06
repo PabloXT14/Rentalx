@@ -34,6 +34,7 @@ class ImportCategoryUseCase {
                     });
                 })
                 .on('end', () => {
+                    fs.promises.unlink(file.path); // removendo arquivo criado
                     resolve(categories);
                 })
                 .on('error', err => {
