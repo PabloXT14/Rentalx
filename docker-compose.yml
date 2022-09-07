@@ -1,0 +1,12 @@
+# versão do arquivo de composição do Docker-Compose (veja mais na documentação)
+version: "3.8"
+
+# Servicos que vamos rodar em nossa aplicação
+services:
+  app:
+    build: . # rodando tudo de dentro do arquivo Dockerfile
+    container_name: rentx # definindo nome do container
+    ports:
+      - 3333:3333 # setando incorporação da porta local com a do container no docker
+    volumes:
+      - .:/usr/app # copiando tudo(e qlq alteração) da nossa aplicação e passando para o nosso diretorio no container em execução no docker.
