@@ -1,5 +1,5 @@
 # versão do arquivo de composição do Docker-Compose (veja mais na documentação)
-version: "3.8"
+version: "3.7"
 
 # Servicos que vamos rodar em nossa aplicação
 services:

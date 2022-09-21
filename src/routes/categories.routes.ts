@@ -18,6 +18,7 @@ categoriesRoutes.post('/', (request, response) => {
 
 // Rota Listar todas as Categories
 categoriesRoutes.get('/', (request, response) => {
+    console.log('Acessou listagem de categorias');
     return listCategoriesController.handle(request, response);
 });
 
